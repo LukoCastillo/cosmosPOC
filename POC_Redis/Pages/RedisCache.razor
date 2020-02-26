@@ -1,0 +1,52 @@
+﻿@page "/redisCache"
+
+@using POC_Redis.Data.Abstraction
+@using POC_Redis.Data
+@inject ICacheProvider redisService
+
+<h3>RedisCache</h3>
+
+<label>user value</label>
+<input type="text" class="form-control" placeholder="Enter username" @bind="userName">
+<p>My user name is <b>@userName</b></p>
+<br />
+<button class="btn btn-primary" @onclick="@SavaUser">Save value</button>
+
+<br />
+<br />
+<button class="btn btn-info" @onclick="@GetValues">Display Redis value</button>
+
+<br />
+<b>Redis Data</b>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+            <th>time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@data.key</td>
+            <td>@data.value</td>
+            <td>@data.time</td>
+        </tr>
+    </tbody>
+</table>
+
+
+@code {
+    private string userName = "";
+    private CacheData data = new CacheData();
+
+    private void SavaUser()
+    {
+        redisService.SaveData(userName);
+    }
+
+    private async Task GetValues()
+    {
+        data = await redisService.GetValue();
+    }
+}
